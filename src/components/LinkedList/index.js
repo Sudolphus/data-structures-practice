@@ -9,6 +9,7 @@ const LinkedListPage = () => {
     newNodeVal: '',
     updateNodeKey: '',
     updateNodeVal: '',
+    deleteNodeKey: '',
     error: null
   };
 
@@ -24,10 +25,7 @@ const LinkedListPage = () => {
     dispatch(a.setError(null));
   }
 
-  const onChangingNewNode = event => {
-    dispatch(a.setNewNodeValue(event.target.value));
-  }
-
+  
   const onUpdateNode = event => {
     event.preventDefault();
     const update = LL.updateNode(state.updateNodeKey, state.updateNodeVal);
@@ -40,12 +38,31 @@ const LinkedListPage = () => {
     }
   }
 
+  const onDeleteNode = event => {
+    event.preventDefault();
+    const deleted = LL.deleteNode(state.deleteNodeKey);
+    if (deleted) {
+      dispatch(a.setDeleteNodeKey(''));
+      dispatch(a.setError(null));
+    } else {
+      dispatch(a.setError('The requested node was not found'));
+    }
+  }
+  
+  const onChangingNewNode = event => {
+    dispatch(a.setNewNodeValue(event.target.value));
+  }
+
   const onChangingUpdateKey = event => {
     dispatch(a.setUpdateNodeKey(event.target.value));
   }
 
   const onChangingUpdateVal = event => {
     dispatch(a.setUpdateNodeValue(event.target.value));
+  }
+
+  const onChangingDeleteKey = event => {
+    dispatch(a.setDeleteNodeKey(event.target.value));
   }
 
   return (
@@ -61,6 +78,11 @@ const LinkedListPage = () => {
         <label for='updateVal'>With This Value</label>
         <input type='text' placeholder='New Value' name='updateVal' id='updateVal' value={state.updateNodeVal} onChange={onChangingUpdateVal} />
         <button type='submit' className='submit-button'>Update Node</button>
+      </form>
+      <form onSubmit={onDeleteNode}>
+        <label for='deleteKey'>Delete This Key</label>
+        <input type='number' placeholder='Node Key' name='deleteKey' id='deleteKey' value={state.deleteNodeKey} onChange={onChangingDeleteKey} />
+        <button type='submit' className='submit-button'>Delete Node</button>
       </form>
       {isEmpty && <p>List Is Empty</p>}
       {state.error && <p>{state.error}</p>}
