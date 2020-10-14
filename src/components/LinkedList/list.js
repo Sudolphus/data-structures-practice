@@ -7,20 +7,31 @@ class LinkedList {
   }
 
   addNode = (val) => {
-    const newNode = LinkedListNode(++this.nextKey, val, this.head);
+    const newNode = new LinkedListNode(++this.nextKey, val, this.head);
     this.head = newNode;
   }
 
   getNode = (key) => {
     let [currentNode, foundFlag] = [this.head, false];
     while (currentNode && !foundFlag) {
-      if (currentNode.key === key) {
+      // eslint-disable-next-line eqeqeq
+      if (currentNode.key == key) {
         foundFlag = true;
       } else {
         currentNode = currentNode.getNext();
       }
     }
     return foundFlag ? currentNode : false;
+  }
+
+  getAllNodes = () => {
+    let currentNode = this.head;
+    const nodeArray = [];
+    while (currentNode) {
+      nodeArray.push(currentNode);
+      currentNode = currentNode.getNext();
+    }
+    return nodeArray;
   }
 
   updateNode = (key, newValue) => {
@@ -38,7 +49,8 @@ class LinkedList {
       return false;
     }
     while (currentNode && !foundFlag) {
-      if (currentNode.key === key) {
+      // eslint-disable-next-line eqeqeq
+      if (currentNode.key == key) {
         foundFlag = true;
       } else {
         previousNode = currentNode;

@@ -1,11 +1,14 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import LinkedList from './list';
 import LinkedListNode from './node';
+import NodeDisplay from './node_display';
 import reducer from './reducer';
 import * as a from './actions';
 
 const LinkedListPage = () => {
   const INITIAL_STATE = {
+    LL: new LinkedList(),
+    nodeArray: [],
     newNodeVal: '',
     updateNodeKey: '',
     updateNodeVal: '',
@@ -15,12 +18,16 @@ const LinkedListPage = () => {
 
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
 
-  const LL = new LinkedList();
-  const isEmpty = LL.head === null ? true : false;
+  const isEmpty = state.LL.head === null ? true : false;
+  
+  useEffect(() => {
+    const nodeArray = state.LL.getAllNodes();
+    dispatch(a.updateNodeArray(nodeArray));
+  }, [state.LL]);
 
   const onAddNode = event => {
     event.preventDefault();
-    LL.addNode(state.newNodeVal);
+    state.LL.addNode(state.newNodeVal);
     dispatch(a.setNewNodeValue(''));
     dispatch(a.setError(null));
   }
@@ -28,7 +35,7 @@ const LinkedListPage = () => {
   
   const onUpdateNode = event => {
     event.preventDefault();
-    const update = LL.updateNode(state.updateNodeKey, state.updateNodeVal);
+    const update = state.LL.updateNode(state.updateNodeKey, state.updateNodeVal);
     if (update) {
       dispatch(a.setUpdateNodeKey(''));
       dispatch(a.setUpdateNodeValue(''));
@@ -40,7 +47,7 @@ const LinkedListPage = () => {
 
   const onDeleteNode = event => {
     event.preventDefault();
-    const deleted = LL.deleteNode(state.deleteNodeKey);
+    const deleted = state.LL.deleteNode(state.deleteNodeKey);
     if (deleted) {
       dispatch(a.setDeleteNodeKey(''));
       dispatch(a.setError(null));
@@ -68,24 +75,25 @@ const LinkedListPage = () => {
   return (
     <div>
       <form onSubmit={onAddNode}>
-        <label for='newNode'>Add a New Node: </label>
+        <label htmlFor='newNode'>Add a New Node: </label>
         <input type='text' placeholder='Node Value' name='newNode' id='newNode' value={state.newNodeVal} onChange={onChangingNewNode} />
         <button type='submit' className='submit-button'>Add New Node</button>
       </form>
       <form onSubmit={onUpdateNode}>
-        <label for='updateKey'>Update This Key</label>
+        <label htmlFor='updateKey'>Update This Key</label>
         <input type='number' placeholder='Node Key' name='updateKey' id='updateKey' value={state.updateNodeKey} onChange={onChangingUpdateKey} />
-        <label for='updateVal'>With This Value</label>
+        <label htmlFor='updateVal'>With This Value</label>
         <input type='text' placeholder='New Value' name='updateVal' id='updateVal' value={state.updateNodeVal} onChange={onChangingUpdateVal} />
         <button type='submit' className='submit-button'>Update Node</button>
       </form>
       <form onSubmit={onDeleteNode}>
-        <label for='deleteKey'>Delete This Key</label>
+        <label htmlFor='deleteKey'>Delete This Key</label>
         <input type='number' placeholder='Node Key' name='deleteKey' id='deleteKey' value={state.deleteNodeKey} onChange={onChangingDeleteKey} />
         <button type='submit' className='submit-button'>Delete Node</button>
       </form>
       {isEmpty && <p>List Is Empty</p>}
       {state.error && <p>{state.error}</p>}
+      {state.LL.getAllNodes().map(node => <NodeDisplay key={node.key} node={node} />)}
     </div>
   )
 }

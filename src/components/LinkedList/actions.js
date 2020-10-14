@@ -23,4 +23,9 @@ export const setUpdateNodeValue = (val) => ({
 export const setDeleteNodeKey = (key) => ({
   type: t.SET_DELETE_NODE_KEY,
   deleteNodeKey: key
-})
+});
+
+export const updateNodeArray = (nodeArray) => ({
+  type: t.UPDATE_NODE_ARRAY,
+  nodeArray
+});

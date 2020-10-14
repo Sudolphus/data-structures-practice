@@ -1,7 +1,7 @@
 import * as t from './types';
 
 export default (state, action) => {
-  const { type, error, newNodeVal, updateNodeKey, updateNodeVal, deleteNodeKey } = action;
+  const { type, error, newNodeVal, updateNodeKey, updateNodeVal, deleteNodeKey, nodeArray } = action;
   switch(type) {
     case t.SET_ERROR:
       return Object.assign({}, state, { error });
@@ -13,6 +13,8 @@ export default (state, action) => {
       return Object.assign({}, state, { updateNodeVal });
     case t.SET_DELETE_NODE_KEY:
       return Object.assign({}, state, { deleteNodeKey });
+    case t.UPDATE_NODE_ARRAY:
+      return Object.assign({}, state, { nodeArray });
     default:
       return state;
   }
